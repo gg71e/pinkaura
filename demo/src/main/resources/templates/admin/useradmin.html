@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pink Aura | Users Admin</title>
+    <style>
+        body{ margin:0; font-family:'Segoe UI', sans-serif; background:#fff0f5; }
+        .wrapper{ display:flex; min-height:100vh; }
+        .sidebar{ width:250px; background:#9f2863; color:white; display:flex; flex-direction:column; justify-content:space-between; padding:20px; }
+        .logo{ text-align:center; }
+        .logo img{ width:70px; height:70px; border-radius:15px; border:2px solid #ff69b4; }
+        .logo h2{ margin:10px 0; font-size:18px; }
+        .nav a{ display:block; color:white; text-decoration:none; padding:12px; margin:6px 0; border-radius:10px; transition:0.3s; }
+        .nav a:hover, .nav a.active{ background:#ff69b4; }
+        .main{ flex:1; display:flex; flex-direction:column; }
+        .content{ flex:1; padding:25px; }
+        .title{ font-size:22px; color:#9f2863; font-weight:bold; margin-bottom:20px; }
+        table{ width:100%; background:white; border-radius:15px; overflow:hidden; border-collapse:collapse; box-shadow:0 5px 15px rgba(0,0,0,0.08); }
+        th{ background:#9f2863; color:white; padding:12px; text-align:left; }
+        td{ padding:12px; }
+        tr:nth-child(even){ background:#fff0f5; }
+        .btn{ padding:6px 10px; border:none; border-radius:8px; cursor:pointer; font-size:12px; text-decoration:none; display:inline-block; }
+        .ban{ background:#ff9800; color:white; }
+        .delete{ background:#c2185b; color:white; }
+        .footer{ background:#9f2863; color:white; text-align:center; padding:12px; font-size:14px; margin-top:auto; }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div class="sidebar">
+        <div>
+            <div class="logo">
+                <img th:src="@{/images/logo.jpg}">
+                <h2>Pink Aura Admin</h2>
+            </div>
+            <div class="nav">
+                <a th:href="@{/admin/dashboard}">Dashboard</a>
+                <a th:href="@{/admin/products}">Products</a>
+                <a th:href="@{/admin/users}" class="active">Users</a>
+                <a th:href="@{/admin/orders}">Orders</a>
+                <a th:href="@{/admin/messages}">Messages</a>
+            </div>
+        </div>
+        <div style="text-align:center; font-size:12px; opacity:0.7;">© 2026 Pink Aura</div>
+    </div>
+    <div class="main">
+        <div class="content">
+            <div class="title">Users Management</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user : ${usersList}">
+                        <td th:text="${user.first_name + ' ' + user.last_name}">Ganna Elwan</td>
+                        <td th:text="${user.email}">ganna@example.com</td>
+                        <td th:text="${user.role}">ROLE_USER</td>
+                        <td>
+                            <a th:href="@{/admin/users/delete/{id}(id=${user.id})}" class="btn delete" 
+                               onclick="return confirm('Are you sure?')">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="footer">Pink Aura Admin System | Users Control Panel ✨</div>
+    </div>
+</div>
+</body>
+</html>

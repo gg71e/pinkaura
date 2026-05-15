@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Product | Pink Aura</title>
+    <style>
+        body{ font-family:'Segoe UI', sans-serif; background:#fff0f5; display:flex; justify-content:center; align-items:center; height:100vh; margin:0; }
+        .edit-container{ background:white; padding:30px; border-radius:20px; box-shadow:0 10px 25px rgba(0,0,0,0.1); width:400px; border-top: 5px solid #9f2863; }
+        h2{ color:#9f2863; text-align:center; }
+        input{ width:100%; padding:12px; margin:10px 0; border-radius:10px; border:1px solid #ddd; box-sizing: border-box; }
+        .save-btn{ width:100%; background:#9f2863; color:white; border:none; padding:12px; border-radius:10px; cursor:pointer; font-size:16px; }
+        .cancel-link{ display:block; text-align:center; margin-top:15px; color:#9f2863; text-decoration:none; }
+    </style>
+</head>
+<body>
+
+<div class="edit-container">
+    <h2>Edit Product</h2>
+    <form th:action="@{/admin/products/update}" th:object="${product}" method="POST">
+        
+        <input type="hidden" th:field="*{id}">
+
+        <label>Brand</label>
+        <input type="text" th:field="*{brand}" required>
+
+        <label>Product Name</label>
+        <input type="text" th:field="*{product_name}" required>
+
+        <label>Price</label>
+        <input type="number" step="0.01" th:field="*{price}" required>
+
+        <label>Image Path</label>
+        <input type="text" th:field="*{image}" required>
+
+        <label>Button Name</label>
+        <input type="text" th:field="*{button_name}" required>
+
+        <button type="submit" class="save-btn">Save Changes</button>
+        <a th:href="@{/admin/products}" class="cancel-link">Cancel</a>
+    </form>
+</div>
+
+</body>
+</html>

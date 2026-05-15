@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pink Aura | Messages</title>
+    <style>
+        body{ margin:0; font-family:'Segoe UI', sans-serif; background:#fff0f5; }
+        .dashboard{ display:flex; min-height:100vh; }
+        .sidebar{ width:260px; background:#9f2863; color:white; display:flex; flex-direction:column; justify-content:space-between; padding:20px; }
+        .logo{ text-align:center; }
+        .logo img{ width:70px; height:70px; border-radius:15px; border:2px solid #ff69b4; }
+        .nav a{ display:block; color:white; text-decoration:none; padding:12px; margin:6px 0; border-radius:10px; transition:0.3s; }
+        .nav a:hover, .nav a.active{ background:#ff69b4; }
+        .main{ flex:1; padding:25px; }
+        .topbar{ display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+        .welcome{ font-size:22px; color:#9f2863; font-weight:bold; }
+        .messages-container{ display:flex; flex-direction:column; gap:15px; }
+        .message-card{ background:white; padding:20px; border-radius:15px; box-shadow:0 5px 15px rgba(0,0,0,0.08); border-left:5px solid #ff69b4; position: relative; }
+        .message-header{ display:flex; justify-content:space-between; font-weight:bold; color:#9f2863; margin-bottom: 10px; }
+        .message-body{ margin:10px 0; color:#444; line-height: 1.5; }
+        .reply-box{ display:none; margin-top:15px; padding-top: 15px; border-top: 1px dashed #ddd; }
+        .reply-box textarea{ width: 100%; padding:10px; border-radius:10px; border:1px solid #ddd; resize:none; box-sizing: border-box; }
+        .reply-box button{ margin-top:8px; background:#9f2863; color:white; border:none; padding:8px 20px; border-radius:10px; cursor:pointer; transition: 0.3s; }
+        .reply-box button:hover{ background: #7a1f4c; }
+        .actions { margin-top: 15px; display: flex; gap: 10px; }
+        .btn-reply { background:#ff69b4; color:white; border:none; padding:8px 15px; border-radius:10px; cursor:pointer; }
+        .del-btn { background:#c2185b; color:white; border:none; padding:8px 15px; border-radius:10px; cursor:pointer; text-decoration:none; font-size: 14px; }
+        footer{ background:#9f2863; color:white; text-align:center; padding:15px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+<div class="dashboard">
+    <div class="sidebar">
+        <div>
+            <div class="logo">
+                <img th:src="@{/images/logo.jpg}">
+                <h2>Pink Aura Admin</h2>
+            </div>
+            <div class="nav">
+                <a th:href="@{/admin/dashboard}">Dashboard</a>
+                <a th:href="@{/admin/products}">Products</a>
+                <a th:href="@{/admin/users}">Users</a>
+                <a th:href="@{/admin/orders}">Orders</a>
+                <a th:href="@{/admin/messages}" class="active">Messages</a>
+            </div>
+        </div>
+        <div class="sidebar-footer">© 2026 Pink Aura System</div>
+    </div>
+
+    <div class="main">
+        <div class="topbar">
+            <div class="welcome">Messages Inbox</div>
+        </div>
+
+        <div class="messages-container">
+            <div class="message-card" th:each="msg : ${messagesList}">
+                <div class="message-header">
+                    <span th:text="${msg.fname + ' ' + msg.lname}">Customer Name</span>
+                    <span th:text="${msg.email}" style="font-weight: normal; font-size: 14px;">email@test.com</span>
+                </div>
+                <div class="message-body" th:text="${msg.message}">
+                    Content of the message goes here...
+                </div>
+                
+                <div class="actions">
+                    <button class="btn-reply" onclick="toggleReply(this)">Reply</button>
+                    
+                    <a th:href="@{/admin/messages/delete/{id}(id=${msg.id})}" 
+                       class="del-btn" 
+                       onclick="return confirm('Are you sure you want to delete this message?')">
+                       Delete
+                    </a>
+                </div>
+                
+                <div class="reply-box">
+                    <form th:action="@{/admin/messages/reply}" method="post">
+                        <input type="hidden" name="messageId" th:value="${msg.id}">
+                        <textarea rows="3" name="replyText" placeholder="Write your reply here..." required></textarea>
+                        <button type="submit" 
+        class="btn btn-reply" 
+        onclick="showReplySuccess()">
+    Reply
+</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div th:if="${#lists.isEmpty(messagesList)}" style="text-align: center; padding: 50px; color: #9f2863;">
+                <h3>No messages found! 💌</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>Pink Aura Admin Dashboard | Messages System ✨</footer>
+
+<script>
+    function toggleReply(btn){
+        // بنجيب الـ reply-box اللي بعد الـ actions div مباشرة
+        let box = btn.parentElement.nextElementSibling;
+        box.style.display = (box.style.display === "block") ? "none" : "block";
+    }
+    function showReplySuccess() {
+    // دي رسالة بسيطة بتظهر للأدمن
+    alert("Reply sent successfully to the customer!");
+}
+</script>
+</body>
+</html>

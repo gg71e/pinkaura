@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Pink Aura | Products Admin</title>
+
+<style>
+    /* الـ CSS بتاعك زي ما هو بالظبط */
+    body{ margin:0; font-family:'Segoe UI', sans-serif; background:#fff0f5; display:flex; flex-direction:column; min-height:100vh; }
+    .dashboard{ display:flex; flex:1; }
+    .sidebar{ width:260px; background:#9f2863; color:white; padding:20px; }
+    .logo{ text-align:center; margin-bottom:30px; }
+    .logo img{ width:70px; height:70px; border-radius:15px; border:2px solid #ff69b4; }
+    .nav a{ display:block; color:white; text-decoration:none; padding:12px; margin:6px 0; border-radius:10px; }
+    .nav a:hover, .nav a.active{ background:#ff69b4; }
+    .main{ flex:1; padding:25px; }
+    .topbar{ display:flex; justify-content:space-between; margin-bottom:20px; }
+    h2{font-size:18px;margin:10px 0;}
+    .form-box{ background:white; padding:20px; border-radius:15px; margin-bottom:20px; box-shadow:0 5px 15px rgba(0,0,0,0.08); }
+    .form-box input{ padding:10px; margin:5px; border-radius:10px; border:1px solid #ddd; }
+    .add-btn{ background:#9f2863; color:white; border:none; padding:10px 15px; border-radius:10px; cursor:pointer; }
+    .add-btn:hover{ background:#ff69b4; }
+    table{ width:100%; background:white; border-radius:15px; overflow:hidden; box-shadow:0 5px 15px rgba(0,0,0,0.08); border-collapse: collapse;}
+    th,td{ padding:12px; text-align:left; }
+    th{ background:#9f2863; color:white; }
+    tr:nth-child(even){ background:#fff0f5; }
+    .btn-action{ padding:6px 10px; border:none; border-radius:8px; cursor:pointer; text-decoration: none; display: inline-block; font-size: 13px;}
+    .edit{ background:#ff69b4; color:white; }
+    .delete{ background:#ccc; color: #333; }
+    footer{ background:#9f2863; color:white; text-align:center; padding:15px; }
+</style>
+</head>
+
+<body>
+
+<div class="dashboard">
+
+<div class="sidebar">
+    <div class="logo">
+        <img th:src="@{/images/logo.jpg}">
+        <h2>Pink Aura</h2>
+    </div>
+
+    <div class="nav">
+        <a th:href="@{/admin/dashboard}">Dashboard</a>
+        <a th:href="@{/admin/products}" class="active">Products</a>
+        <a th:href="@{/admin/users}">Users</a>
+        <a th:href="@{/admin/orders}">Orders</a>
+        <a th:href="@{/admin/messages}">Messages</a>
+    </div>
+</div>
+
+<div class="main">
+    <div class="topbar">
+        <h2>Manage Products</h2>
+    </div>
+
+    <form th:action="@{/admin/products/add}" method="POST" class="form-box">
+        <input type="text" name="brand" placeholder="Brand" required>
+        <input type="text" name="product_name" placeholder="Product Name" required>
+        <input type="number" name="price" placeholder="Price" required>
+        <input type="text" name="image" placeholder="Image path (e.g. p1.jpg)" required>
+        <input type="text" name="button_name" placeholder="Button Name" required>
+        <button type="submit" class="add-btn">Add Product</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Product</th>
+                <th>Brand</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="product : ${productsList}">
+                <td>
+                    <img th:src="@{'/images/' + ${product.image}}" 
+                         style="width:70px; height:70px; object-fit:cover; border-radius:10px;">
+                </td>
+                <td th:text="${product.product_name}">Product Name</td>
+                <td th:text="${product.brand}">Brand</td>
+                <td th:text="${product.price + ' EGP'}">0 EGP</td>
+                <td>
+                    <a th:href="@{/admin/products/edit/{id}(id=${product.id})}" class="btn-action edit">Update</a>
+                    <a th:href="@{/admin/products/delete/{id}(id=${product.id})}" 
+                       class="btn-action delete" 
+                       onclick="return confirm('Delete this product?')">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</div>
+
+<footer>
+© 2026 Pink Aura | Products Admin
+</footer>
+</body>
+</html>
