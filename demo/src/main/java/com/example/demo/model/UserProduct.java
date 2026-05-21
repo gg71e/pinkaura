@@ -1,6 +1,6 @@
 package com.example.demo.model;
 
-import jakarta.persistence.Column; 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,8 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "products")
-public class Product {
+@Table(name = "products") 
+public class UserProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +19,7 @@ public class Product {
     private String brand;
 
     @Column(name = "product_name") 
-    private String product_name;
+    private String productName;
 
     @Column(name = "price")
     private double price;
@@ -28,9 +28,7 @@ public class Product {
     private String image;
 
     @Column(name = "button_name") 
-    private String button_name;
-
-    public Product() {}
+    private String buttonName;
 
    
     public Long getId() { return id; }
@@ -39,8 +37,8 @@ public class Product {
     public String getBrand() { return brand; }
     public void setBrand(String brand) { this.brand = brand; }
 
-    public String getProduct_name() { return product_name; }
-    public void setProduct_name(String product_name) { this.product_name = product_name; }
+    public String getProductName() { return productName; }
+    public void setProductName(String productName) { this.productName = productName; }
 
     public double getPrice() { return price; }
     public void setPrice(double price) { this.price = price; }
@@ -48,6 +46,6 @@ public class Product {
     public String getImage() { return image; }
     public void setImage(String image) { this.image = image; }
 
-    public String getButton_name() { return button_name; }
-    public void setButton_name(String button_name) { this.button_name = button_name; }
+    public String getButtonName() { return buttonName; }
+    public void setButtonName(String buttonName) { this.buttonName = buttonName; }
 }

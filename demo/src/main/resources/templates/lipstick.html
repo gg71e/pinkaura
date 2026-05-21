@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pink Aura | Lipstick</title>
+    <style>
+       
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #fff0f5; font-family: 'Segoe UI', Tahoma, sans-serif; overflow-x: hidden; }
+        header { background: #9f2863; padding: 15px 60px; color: white; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .logo-container { display: flex; align-items: center; }
+        .logo-container img { width: 60px; height: 60px; margin-right: 15px; border-radius: 10px; object-fit: cover; }
+        header h1 { margin: 0; font-family: 'Playfair Display', Georgia, serif; font-size: 32px; }
+        nav { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+        nav a { color: white; text-decoration: none; font-weight: bold; padding: 8px 18px; border-radius: 20px; transition: 0.3s; }
+        nav a:hover { background: #ff69b4; transform: translateY(-2px); }
+        .page-title { text-align: center; font-family: 'Playfair Display', Georgia, serif; color: #9f2863; font-size: 45px; margin: 40px 0 20px 0; }
+        .category-nav { display: flex; justify-content: center; gap: 12px; padding: 20px 60px; margin-bottom: 20px; flex-wrap: wrap; }
+        .category-nav a { text-decoration: none; color: #9f2863; background-color: #fce4ec; padding: 10px 22px; border-radius: 50px; font-weight: 600; font-size: 14px; border: 1px solid #f8bbd0; transition: 0.3s; }
+        .category-nav a:hover, .category-nav a.active { background-color: #9f2863; color: white; transform: translateY(-2px); }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; padding: 40px 60px; background-color: #fff; }
+        .product-item { background: #fff; border-radius: 12px; padding: 15px; transition: all 0.3s ease; border: 1px solid rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; }
+        .product-item:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(159,40,99,0.15); }
+        .product-item img { width: 100%; height: 250px; object-fit: contain; background-color: #f9f9f9; border-radius: 8px; margin-bottom: 15px; cursor: pointer; }
+        .brand-name { color: #9f2863; font-weight: bold; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+        .product-name { font-size: 14px; color: #333; margin: 8px 0; min-height: 42px; line-height: 1.4; }
+        .product-price { font-weight: bold; font-size: 18px; color: #9f2863; display: block; margin-bottom: 10px; }
+        .add-to-cart-btn { background: #9f2863; color: white; border: none; padding: 12px; width: 100%; border-radius: 25px; cursor: pointer; transition: 0.3s; font-weight: bold; font-size: 14px; }
+        .add-to-cart-btn:hover { background: #ff69b4; transform: scale(1.02); }
+        .cart-nav-item { display: inline-flex; align-items: center; background: #ff69b4; color: white; padding: 5px 15px; border-radius: 20px; cursor: pointer; margin-left: 15px; font-weight: bold; gap: 8px; }
+        .cart-nav-item:hover { background: #9f2863; transform: scale(1.05); }
+        .profile-icon img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #ff69b4; object-fit: cover; cursor: pointer; transition: 0.3s; }
+        .profile-icon img:hover { transform: scale(1.1); }
+        .cart-sidebar { position: fixed; top: 0; right: -400px; width: 380px; height: 100vh; background: white; box-shadow: -5px 0 15px rgba(0,0,0,0.1); transition: 0.4s; z-index: 2000; padding: 20px; display: flex; flex-direction: column; }
+        .cart-sidebar.open { right: 0; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .cart-header h3 { margin: 0; color: #9f2863; }
+        .close-cart { cursor: pointer; font-size: 28px; color: #9f2863; }
+        #cart-items-container { flex: 1; overflow-y: auto; margin-top: 15px; }
+        .cart-item { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid #f9f9f9; padding-bottom: 10px; }
+        .cart-item img { width: 50px; height: 50px; object-fit: contain; border-radius: 5px; }
+        .cart-footer { border-top: 1px solid #eee; padding-top: 15px; margin-top: auto; }
+        .total-row { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 15px; font-size: 18px; }
+        .checkout-btn { display: block; width: 100%; background: #9f2863; color: white; border: none; padding: 12px; border-radius: 25px; cursor: pointer; font-weight: bold; text-align: center; text-decoration: none; transition: 0.3s; }
+        .checkout-btn:hover { background: #ff69b4; }
+        .filter-btn { position: fixed; left: 0; top: 120px; background: #9f2863; color: white; padding: 12px 18px; cursor: pointer; border-radius: 0 20px 20px 0; z-index: 3000; font-weight: bold; transition: 0.3s; }
+        .filter-btn:hover { background: #ff69b4; padding-left: 25px; }
+        .filter-sidebar { position: fixed; top: 0; left: -380px; width: 320px; height: 100%; background: #fff0f5; padding: 20px; transition: 0.3s; z-index: 9999; overflow-y: auto; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+        .filter-sidebar.open { left: 0; }
+        .filter-sidebar h3 { color: #9f2863; margin-bottom: 20px; }
+        .filter-group { margin-bottom: 20px; }
+        .filter-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #333; }
+        .filter-group input[type="text"] { width: 100%; padding: 8px; border: 1px solid #f8bbd0; border-radius: 8px; }
+        .filter-group input[type="range"] { width: 100%; }
+        .filter-group input[type="checkbox"] { margin-right: 8px; }
+        footer { background: #9f2863; color: white; text-align: center; padding: 15px; margin-top: 40px; }
+        @media (max-width: 768px) {
+            header { padding: 15px 20px; flex-direction: column; gap: 15px; }
+            .products-grid { padding: 20px; gap: 15px; }
+            .category-nav { padding: 10px; }
+            .cart-sidebar { width: 100%; right: -100%; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-container">
+        <img src="/images/logo.jpg" alt="Pink Aura Logo">
+        <h1>Pink Aura</h1>
+    </div>
+    <nav>
+        <a href="/home">Home</a>
+        <a href="/products">Products</a>
+        <a href="/about">About Us</a>
+        <a href="/contact">Contact Us</a>
+         <div class="cart-nav-item" onclick="toggleCart()" id="cartIcon">🛒 <span id="cart-count">0</span></div>
+        <div class="logout-btn" onclick="showLogoutBanner()">⏻</div>
+    </nav>
+</header>
+
+<h1 class="page-title">Lipstick</h1>
+
+<div class="category-nav">
+    <a href="/blush">Blush</a>
+    <a href="/lipstick" class="active">Lipstick</a>
+    <a href="/mascara">Mascara</a>
+    <a href="/foundation">Foundation</a>
+   
+</div>
+
+<div class="filter-btn" onclick="toggleFilter()">🔍 Filter</div>
+
+<div id="filter-sidebar" class="filter-sidebar">
+    <h3>Filter Products</h3>
+    <div class="filter-group"><input type="text" id="searchInput" placeholder="Search product..."></div>
+    <div class="filter-group"><label>Max Price</label><input type="range" id="priceRange" min="0" max="10000" value="10000"><div><span id="priceValue">10000</span> EGP</div></div>
+    <div class="filter-group">
+        <label>Brand</label>
+        <label><input type="checkbox" value="DIOR"> DIOR</label><br>
+        <label><input type="checkbox" value="KIKO Milano"> KIKO Milano</label><br>
+        <label><input type="checkbox" value="MAC"> MAC</label><br>
+        <label><input type="checkbox" value="YSL"> YSL</label>
+    </div>
+    <button onclick="applyFilter()" style="background:#9f2863;color:white;border:none;padding:10px;width:100%;border-radius:20px;margin-bottom:10px;">Apply</button>
+    <button onclick="resetFilter()" style="background:#ccc;border:none;padding:10px;width:100%;border-radius:20px;">Reset</button>
+</div>
+
+<div class="products-grid">
+    <div class="product-item" data-price="3600" data-brand="DIOR" data-id="82">
+        <img src="/makeuppics/diorlipoil3600.jpg" alt="DIOR" onclick="goToProduct(82)">
+        <div class="brand-name">DIOR</div>
+        <div class="product-name">Lip Glow Oil - Shade Rosewood | Glossy Hydrating Finish 6ml</div>
+        <div class="product-price">3,600 EGP</div>
+        <button class="add-to-cart-btn" onclick="addToCart(82, 'Dior Lip Oil', 3600, '/makeuppics/diorlipoil3600.jpg', event)">Add to Cart</button>
+    </div>
+
+    <div class="product-item" data-price="2500" data-brand="DIOR" data-id="83">
+        <img src="/makeuppics/dior lipstick 2500.jpg" alt="DIOR" onclick="goToProduct(83)">
+        <div class="brand-name">DIOR</div>
+        <div class="product-name">Rouge Dior Lipstick - Shade 999 Red | Velvet Matte Finish 3.5g</div>
+        <div class="product-price">2,500 EGP</div>
+        <button class="add-to-cart-btn" onclick="addToCart(83, 'Dior Lipstick', 2500, '/makeuppics/dior lipstick 2500.jpg', event)">Add to Cart</button>
+    </div>
+
+    <div class="product-item" data-price="1600" data-brand="KIKO Milano" data-id="84">
+        <img src="/makeuppics/kiko1600.jpg" alt="KIKO Milano" onclick="goToProduct(84)">
+        <div class="brand-name">KIKO MILANO</div>
+        <div class="product-name">Unlimited Double Touch Lipstick | Transfer-Proof Matte + Gloss 6ml</div>
+        <div class="product-price">1,600 EGP</div>
+        <button class="add-to-cart-btn" onclick="addToCart(84, 'Kiko Lipstick', 1600, '/makeuppics/kiko1600.jpg', event)">Add to Cart</button>
+    </div>
+
+    <div class="product-item" data-price="1300" data-brand="MAC" data-id="85">
+        <img src="/makeuppics/macclipstick 1300.png" alt="MAC" onclick="goToProduct(85)">
+        <div class="brand-name">MAC</div>
+        <div class="product-name">Matte Lipstick - Shade Velvet Teddy | Creamy Matte Finish 3g</div>
+        <div class="product-price">1,300 EGP</div>
+        <button class="add-to-cart-btn" onclick="addToCart(85, 'MAC Lipstick', 1300, '/makeuppics/macclipstick 1300.png', event)">Add to Cart</button>
+    </div>
+
+    <div class="product-item" data-price="2950" data-brand="YSL" data-id="86">
+        <img src="/makeuppics/ysl2950.jpg" alt="YSL" onclick="goToProduct(86)">
+        <div class="brand-name">YSL</div>
+        <div class="product-name">Rouge Volupté Shine - Shade Coral | Glossy Hydrating Lipstick 3.2g</div>
+        <div class="product-price">2,950 EGP</div>
+        <button class="add-to-cart-btn" onclick="addToCart(86, 'YSL Lipstick', 2950, '/makeuppics/ysl2950.jpg', event)">Add to Cart</button>
+    </div>
+</div>
+
+<div id="cart-sidebar" class="cart-sidebar">
+    <div class="cart-header"><h3>Your Shopping Cart</h3><span class="close-cart" onclick="toggleCart()">&times;</span></div>
+    <div id="cart-items-container"><div style="text-align: center; color: #999; padding: 40px;">Your cart is empty</div></div>
+    <div class="cart-footer"><div class="total-row"><span>Total:</span><span><span id="cart-total">0</span> EGP</span></div><a href="/checkout" class="checkout-btn">Proceed to Checkout</a></div>
+</div>
+
+<footer>© 2026 Pink Aura | Elegance in Every Touch</footer>
+
+<script>
+    let cart = JSON.parse(localStorage.getItem('pinkAuraCart')) || [];
+    window.onload = function() { updateCartUI(); };
+    function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('open'); }
+    function goToProduct(id) { window.location.href = '/product/' + id; }
+    function addToCart(id, name, price, img, event) {
+        if(event) event.preventDefault();
+        cart.push({ id: id, name: name, price: parseFloat(price), image: img });
+        updateCartUI();
+        localStorage.setItem('pinkAuraCart', JSON.stringify(cart));
+        const btn = event.target;
+        const original = btn.textContent;
+        btn.textContent = '✓ Added!';
+        btn.style.background = '#4CAF50';
+        setTimeout(() => { btn.textContent = original; btn.style.background = '#9f2863'; }, 1000);
+        flyToCart(event.target);
+        showNotification(name + ' added to cart!');
+    }
+    function showNotification(msg) {
+        const notif = document.createElement('div');
+        notif.textContent = '✓ ' + msg;
+        notif.style.position = 'fixed'; notif.style.bottom = '20px'; notif.style.right = '20px';
+        notif.style.background = '#9f2863'; notif.style.color = 'white'; notif.style.padding = '12px 20px';
+        notif.style.borderRadius = '8px'; notif.style.zIndex = '10000'; notif.style.fontWeight = 'bold';
+        document.body.appendChild(notif);
+        setTimeout(() => notif.remove(), 2000);
+    }
+    function updateCartUI() {
+        const container = document.getElementById('cart-items-container');
+        const totalElem = document.getElementById('cart-total');
+        const countElem = document.getElementById('cart-count');
+        if(!container) return;
+        let total = 0;
+        if(cart.length === 0) container.innerHTML = '<div style="text-align:center;color:#999;padding:40px;">Your cart is empty</div>';
+        else {
+            container.innerHTML = '';
+            cart.forEach((item, index) => {
+                total += item.price;
+                container.innerHTML += `<div class="cart-item"><img src="${item.image}"><div style="flex:1;"><div style="font-size:14px;font-weight:bold;">${item.name}</div><div style="color:#9f2863;">${item.price} EGP</div></div><button onclick="removeFromCart(${index})" style="color:#999;background:none;border:none;cursor:pointer;font-size:24px;">&times;</button></div>`;
+            });
+        }
+        if(totalElem) totalElem.innerText = total;
+        if(countElem) countElem.innerText = cart.length;
+        localStorage.setItem('pinkAuraCart', JSON.stringify(cart));
+    }
+    function removeFromCart(index) { cart.splice(index, 1); updateCartUI(); }
+    function toggleFilter() { document.getElementById('filter-sidebar').classList.toggle('open'); }
+    const priceRange = document.getElementById('priceRange');
+    const priceValue = document.getElementById('priceValue');
+    if(priceRange) priceRange.oninput = function() { priceValue.innerText = this.value; };
+    function applyFilter() {
+        let searchValue = document.getElementById('searchInput').value.toLowerCase();
+        let maxPrice = parseInt(document.getElementById('priceRange').value);
+        let checkedBrands = [];
+        document.querySelectorAll('#filter-sidebar input[type="checkbox"]:checked').forEach(cb => checkedBrands.push(cb.value));
+        document.querySelectorAll('.product-item').forEach(p => {
+            let price = parseInt(p.dataset.price);
+            let brand = p.dataset.brand;
+            let text = p.innerText.toLowerCase();
+            let show = true;
+            if(searchValue && !text.includes(searchValue)) show = false;
+            if(price > maxPrice) show = false;
+            if(checkedBrands.length && !checkedBrands.includes(brand)) show = false;
+            p.style.display = show ? 'flex' : 'none';
+        });
+        document.getElementById('filter-sidebar').classList.remove('open');
+    }
+    function resetFilter() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('priceRange').value = 10000;
+        document.getElementById('priceValue').innerText = 10000;
+        document.querySelectorAll('#filter-sidebar input[type="checkbox"]').forEach(cb => cb.checked = false);
+        document.querySelectorAll('.product-item').forEach(p => p.style.display = 'flex');
+    }
+    function flyToCart(btn) {
+        const productCard = btn.closest(".product-item");
+        const productImg = productCard.querySelector("img");
+        const cartIcon = document.getElementById("cartIcon");
+        if(!productImg || !cartIcon) return;
+        const img = productImg.cloneNode(true);
+        document.body.appendChild(img);
+        const start = productImg.getBoundingClientRect();
+        const end = cartIcon.getBoundingClientRect();
+        img.style.position = "fixed";
+        img.style.left = start.left + "px";
+        img.style.top = start.top + "px";
+        img.style.width = start.width + "px";
+        img.style.height = start.height + "px";
+        img.style.zIndex = "99999";
+        img.style.transition = "all 0.8s ease";
+        img.style.pointerEvents = "none";
+        setTimeout(() => {
+            img.style.left = end.left + "px";
+            img.style.top = end.top + "px";
+            img.style.width = "30px";
+            img.style.height = "30px";
+            img.style.opacity = "0";
+        }, 10);
+        setTimeout(() => img.remove(), 900);
+    }
+</script>
+</body>
+</html>

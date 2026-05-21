@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pink Aura | Cleanser Products</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #fff0f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: #9f2863;
+            padding: 15px 60px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            flex-wrap: wrap;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-container img {
+            width: 60px;
+            height: 60px;
+            margin-right: 15px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        header h1 {
+            margin: 0;
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 32px;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 18px;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            background: #ff69b4;
+            transform: translateY(-2px);
+        }
+
+        .cart-nav-item {
+            display: inline-flex;
+            align-items: center;
+            background: #ff69b4;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            gap: 8px;
+        }
+
+        .cart-nav-item:hover {
+            background: #9f2863;
+            transform: scale(1.05);
+        }
+
+        .logout-btn {
+            cursor: pointer;
+            font-size: 20px;
+            color: white;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .profile-icon img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #ff69b4;
+            object-fit: cover;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .profile-icon img:hover {
+            transform: scale(1.1);
+        }
+
+        .skincare-title {
+            text-align: center;
+            font-family: 'Playfair Display', Georgia, serif;
+            color: #9f2863;
+            font-size: 45px;
+            margin: 40px 0 20px 0;
+        }
+
+        .category-nav {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            padding: 20px 60px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .category-nav a {
+            text-decoration: none;
+            color: #9f2863;
+            background-color: #fce4ec;
+            padding: 10px 22px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            border: 1px solid #f8bbd0;
+            transition: 0.3s;
+        }
+
+        .category-nav a:hover {
+            background-color: #9f2863;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .category-nav a.active {
+            background-color: #9f2863;
+            color: white;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 40px 60px;
+            background-color: #fff;
+        }
+
+        .product-item {
+            background: #fff;
+            border-radius: 12px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(159, 40, 99, 0.15);
+        }
+
+        .product-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: contain;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .brand-name {
+            color: #9f2863;
+            font-weight: bold;
+            font-size: 12px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .product-name {
+            font-size: 15px;
+            color: #333;
+            margin: 8px 0;
+            min-height: 42px;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .product-price {
+            font-weight: bold;
+            font-size: 20px;
+            color: #9f2863;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .add-to-cart-btn {
+            background: #9f2863;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .add-to-cart-btn:hover {
+            background: #ff69b4;
+            transform: scale(1.02);
+        }
+
+        .filter-btn {
+            position: fixed;
+            left: 0;
+            top: 120px;
+            background: #9f2863;
+            color: white;
+            padding: 12px 18px;
+            cursor: pointer;
+            border-radius: 0 20px 20px 0;
+            z-index: 3000;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .filter-btn:hover {
+            background: #ff69b4;
+            padding-left: 25px;
+        }
+
+        .filter-sidebar {
+            position: fixed;
+            top: 0;
+            left: -380px;
+            width: 320px;
+            height: 100%;
+            background: #fff0f5;
+            padding: 20px;
+            transition: 0.3s;
+            z-index: 9999;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .filter-sidebar.open {
+            left: 0;
+        }
+
+        .filter-sidebar h3 {
+            color: #9f2863;
+            margin-bottom: 20px;
+        }
+
+        .filter-group {
+            margin-bottom: 20px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .filter-group input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #f8bbd0;
+            border-radius: 8px;
+        }
+
+        .filter-group input[type="range"] {
+            width: 100%;
+        }
+
+        .filter-group input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 380px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            transition: 0.4s;
+            z-index: 2000;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+        }
+
+        .cart-sidebar.open {
+            right: 0;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        .cart-header h3 {
+            margin: 0;
+            color: #9f2863;
+        }
+
+        .close-cart {
+            cursor: pointer;
+            font-size: 28px;
+            color: #9f2863;
+        }
+
+        #cart-items-container {
+            flex: 1;
+            overflow-y: auto;
+            margin-top: 15px;
+            padding-right: 5px;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #f9f9f9;
+            padding-bottom: 10px;
+        }
+
+        .cart-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 5px;
+        }
+
+        .cart-footer {
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            margin-top: auto;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .checkout-btn {
+            display: block;
+            width: 100%;
+            background: #9f2863;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .checkout-btn:hover {
+            background: #ff69b4;
+        }
+
+        #logout-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+            .products-grid {
+                padding: 20px;
+                gap: 15px;
+            }
+            .category-nav {
+                padding: 10px;
+            }
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-container">
+        <img src="/images/logo.jpg" alt="Pink Aura Logo">
+        <h1>Pink Aura</h1>
+    </div>
+    <nav>
+        <a href="/home">Home</a>
+        <a href="/products" class="active">Products</a>
+        <a href="/about">About Us</a>
+        <a href="/contactus">Contact Us</a>
+        
+        <div class="cart-nav-item" onclick="toggleCart()" id="cartIcon">
+            🛒 <span id="cart-count">0</span>
+        </div>
+        
+        <div class="logout-btn" onclick="showLogoutBanner()">
+            ⏻
+        </div>
+        
+       
+    </nav>
+</header>
+
+<h1 class="skincare-title">Cleanser</h1>
+
+<div class="category-nav">
+    <a href="/cleanser" class="active">Cleansers</a>
+  
+    <a href="/sunscreen">Sunscreen</a>
+    <a href="/serum">Serum</a>
+    <a href="/moisturizer">Moisturizer</a>
+</div>
+
+<div class="filter-btn" onclick="toggleFilter()">🔍 Filter</div>
+
+<div id="filter-sidebar" class="filter-sidebar">
+    <h3>Filter Products</h3>
+    
+    <div class="filter-group">
+        <label>Search Product</label>
+        <input type="text" id="searchInput" placeholder="Search by name or brand...">
+    </div>
+
+    <div class="filter-group">
+        <label>Max Price: <span id="priceValue">10000</span> EGP</label>
+        <input type="range" id="priceRange" min="0" max="10000" value="10000">
+    </div>
+
+    <div class="filter-group">
+        <label>Brands</label>
+        <label><input type="checkbox" value="CeraVe"> CeraVe</label><br>
+        <label><input type="checkbox" value="Vichy"> Vichy</label><br>
+        <label><input type="checkbox" value="DR ELVISH"> DR ELVISH</label><br>
+        <label><input type="checkbox" value="Moist-1"> Moist-1</label><br>
+        <label><input type="checkbox" value="Bioderma"> Bioderma</label><br>
+        <label><input type="checkbox" value="Avene"> Avene</label><br>
+        <label><input type="checkbox" value="Dermactive"> Dermactive</label><br>
+        <label><input type="checkbox" value="The Oil Off"> The Oil Off</label>
+    </div>
+
+    <button onclick="applyFilter()" style="background:#9f2863; color:white; border:none; padding:10px; width:100%; border-radius:20px; margin-bottom:10px; cursor:pointer;">
+        Apply Filter
+    </button>
+    <button onclick="resetFilter()" style="background:#ccc; color:#333; border:none; padding:10px; width:100%; border-radius:20px; cursor:pointer;">
+        Reset
+    </button>
+</div>
+
+
+<div class="products-grid" id="productsGrid">
+    
+  
+    <div class="product-item" data-price="700" data-brand="CeraVe" data-id="1">
+        <img src="/images/ce.webp" alt="CeraVe" onclick="goToProduct(1)">
+        <div class="brand-name">CeraVe</div>
+        <div class="product-name">Hydrating Facial Cleanser 400ml</div>
+        <div class="product-price">700 EGP</div>
+        <button class="add-to-cart-btn" onclick="addToCart(1, 'CeraVe Hydrating Facial Cleanser', 700, '/images/ce.webp', event)">
+            Add to Cart
+        </button>
+    </div>
+
+   
+    <div class="product-item" data-price="900" data-brand="Vichy" data-id="2">
+        <img src="/images/vichy.webp" alt="Vichy" onclick="goToProduct(2)">
+        <div class="brand-name">Vichy</div>
+        <div class="product-name">Hydrating Facial Cleanser 200ml</div>
+        <div class="product-price">900 EGP</div>
+        <button class="add-to-cart-btn" onclick="addToCart(2, 'Vichy Hydrating Facial Cleanser', 900, '/images/vichy.webp', event)">
+            Add to Cart
+        </button>
+    </div>
+
+   
+    <div class="product-item" data-price="250" data-brand="DR ELVISH" data-id="3">
+        <img src="/images/ca.webp" alt="DR ELVISH" onclick="goToProduct(3)">
+        <div class="brand-name">DR ELVISH</div>
+        <div class="product-name">DR ELVISH Cica Calming Cleanser 200ml</div>
+        <div class="product-price">250 EGP</div>
+        <button class="add-to-cart-btn" onclick="addToCart(3, 'DR ELVISH Cica Calming Cleanser', 250, '/images/ca.webp', event)">
+            Add to Cart
+        </button>
+    </div>
+
+ 
+    <div class="product-item" data-price="200" data-brand="Moist-1" data-id="4">
+        <img src="/images/Moist1.webp" alt="Moist-1" onclick="goToProduct(4)">
+        <div class="brand-name">Moist-1</div>
+        <div class="product-name">Moist-1 Milky Cleanser 200ml</div>
+        <div class="product-price">200 EGP</div>
+        <button class="add-to-cart-btn" onclick="addToCart(4, 'Moist-1 Milky Cleanser', 200, '/images/Moist1.webp', event)">
+            Add to Cart
+        </button>
+    </div>
+
+  
+    <div class="product-item" data-price="900" data-brand="Bioderma" data-id="5">
+        <img src="/images/Bio.jpg" alt="Bioderma" onclick="goToProduct(5)">
+        <div class="brand-name">Bioderma</div>
+        <div class="product-name">Sebium Gel Moussant 200ml</div>
+        <div class="product-price">900 EGP</div>
+        <button class="add-to-cart-btn" onclick="addToCart(5, 'Bioderma Sebium Gel', 900, '/images/Bio.jpg', event)">
+            Add to Cart
+        </button>
+    </div>
+
+  
+    <div class="product-item" data-price="1090" data-brand="Avene" data-id="6">
+        <img src="/images/derma.webp" alt="Avene" onclick="goToProduct(6)">
+        <div class="brand-name">Avene</div>
+        <div class="product-name">Avène Cleanance Acne Cleanser Gel 200ml</div>
+        <div class="product-price">1090 EGP</div>
+        <button class="add-to-cart-btn" onclick="addToCart(6, 'Avène Cleanance Acne Cleanser', 1090, '/images/derma.webp', event)">
+            Add to Cart
+        </button>
+    </div>
+
+    
+    <div class="product-item" data-price="200" data-brand="Dermactive" data-id="7">
+        <img src="/images/Dermactive.jpg" alt="Dermactive" onclick="goToProduct(7)">
+        <div class="brand-name">Dermactive</div>
+        <div class="product-name">ACTI-CLEAR Gentle Cleansing Gel 200ml</div>
+        <div class="product-price">200 EGP</div>
+        <button class="add-to-cart-btn" onclick="addToCart(7, 'Dermactive ACTI-CLEAR Gel', 200, '/images/Dermactive.jpg', event)">
+            Add to Cart
+        </button>
+    </div>
+
+  
+    <div class="product-item" data-price="265" data-brand="The Oil Off" data-id="8">
+        <img src="/images/oiloff.webp" alt="The Oil Off" onclick="goToProduct(8)">
+        <div class="brand-name">The Oil Off</div>
+        <div class="product-name">The Oil Off Purifying Cleansing Foam 200ml</div>
+        <div class="product-price">265 EGP</div>
+        <button class="add-to-cart-btn" onclick="addToCart(8, 'The Oil Off Purifying Foam', 265, '/images/oiloff.webp', event)">
+            Add to Cart
+        </button>
+    </div>
+</div>
+
+
+<div id="cart-sidebar" class="cart-sidebar">
+    <div class="cart-header">
+        <h3>Your Shopping Cart</h3>
+        <span class="close-cart" onclick="toggleCart()">&times;</span>
+    </div>
+    <div id="cart-items-container">
+        <div style="text-align: center; color: #999; padding: 40px 20px;">Your cart is empty</div>
+    </div>
+    <div class="cart-footer">
+        <div class="total-row">
+            <span>Total:</span>
+            <span><span id="cart-total">0</span> EGP</span>
+        </div>
+        <a href="/checkout" class="checkout-btn">Proceed to Checkout</a>
+    </div>
+</div>
+
+
+<div id="logout-modal">
+    <div style="background: white; padding: 30px; border-radius: 15px; text-align: center; width: 300px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+        <h3 style="color: #9f2863; margin-top: 0;">Logout</h3>
+        <p>Are you sure you want to logout?</p>
+        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+            <button onclick="confirmLogout()" style="background: #9f2863; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold;">Logout</button>
+            <button onclick="closeLogoutBanner()" style="background: #eee; color: #333; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer;">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+  
+    let cart = JSON.parse(localStorage.getItem('pinkAuraCart')) || [];
+
+  window.onload = function() {
+    updateCartUI();  
+};
+
+    function toggleCart() {
+        document.getElementById('cart-sidebar').classList.toggle('open');
+    }
+
+    function goToProduct(productId) {
+        window.location.href = '/product/' + productId;
+    }
+
+    function addToCart(id, name, price, image, event) {
+        if(event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        
+        cart.push({
+            id: id,
+            name: name,
+            price: parseFloat(price),
+            image: image
+        });
+        
+        updateCartUI();
+        localStorage.setItem('pinkAuraCart', JSON.stringify(cart));
+        
+       
+        const btn = event.target;
+        const originalText = btn.textContent;
+        btn.textContent = '✓ Added!';
+        btn.style.background = '#4CAF50';
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.background = '#9f2863';
+        }, 1000);
+        
+        flyToCart(event.target);
+    }
+
+    function updateCartUI() {
+        const container = document.getElementById('cart-items-container');
+        const totalElem = document.getElementById('cart-total');
+        const countElem = document.getElementById('cart-count');
+        
+        if(!container) return;
+        
+        let total = 0;
+        
+        if(cart.length === 0) {
+            container.innerHTML = '<div style="text-align: center; color: #999; padding: 40px 20px;">Your cart is empty</div>';
+        } else {
+            container.innerHTML = '';
+            cart.forEach((item, index) => {
+                total += item.price;
+                container.innerHTML += `
+                    <div class="cart-item">
+                        <img src="${item.image}" alt="${item.name}">
+                        <div style="flex:1;">
+                            <div style="font-size:14px; font-weight:bold;">${item.name}</div>
+                            <div style="color:#9f2863; font-weight:bold;">${item.price} EGP</div>
+                        </div>
+                        <button onclick="removeFromCart(${index})" style="color:#999; background:none; border:none; cursor:pointer; font-size:24px;">&times;</button>
+                    </div>
+                `;
+            });
+        }
+        
+        if(totalElem) totalElem.innerText = total;
+        if(countElem) countElem.innerText = cart.length;
+        localStorage.setItem('pinkAuraCart', JSON.stringify(cart));
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCartUI();
+    }
+
+  
+    function toggleFilter() {
+        document.getElementById('filter-sidebar').classList.toggle('open');
+    }
+
+    function applyFilter() {
+        let searchValue = document.getElementById('searchInput').value.toLowerCase();
+        let maxPrice = parseInt(document.getElementById('priceRange').value);
+        
+        let checkedBrands = [];
+        document.querySelectorAll('#filter-sidebar input[type="checkbox"]:checked').forEach(cb => {
+            checkedBrands.push(cb.value);
+        });
+        
+        let products = document.querySelectorAll('.product-item');
+        
+        products.forEach(product => {
+            let price = parseInt(product.getAttribute('data-price'));
+            let brand = product.getAttribute('data-brand');
+            let text = product.innerText.toLowerCase();
+            
+            let show = true;
+            if(searchValue && !text.includes(searchValue)) show = false;
+            if(price > maxPrice) show = false;
+            if(checkedBrands.length > 0 && !checkedBrands.includes(brand)) show = false;
+            
+            product.style.display = show ? 'flex' : 'none';
+        });
+        
+        document.getElementById('filter-sidebar').classList.remove('open');
+    }
+
+    function resetFilter() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('priceRange').value = 10000;
+        document.getElementById('priceValue').innerText = 10000;
+        document.querySelectorAll('#filter-sidebar input[type="checkbox"]').forEach(cb => cb.checked = false);
+        document.querySelectorAll('.product-item').forEach(p => p.style.display = 'flex');
+    }
+
+   
+    const priceRange = document.getElementById('priceRange');
+    const priceValue = document.getElementById('priceValue');
+    if(priceRange) {
+        priceRange.oninput = function() {
+            priceValue.innerText = this.value;
+        };
+    }
+
+  
+    function showLogoutBanner() {
+        document.getElementById('logout-modal').style.display = 'flex';
+    }
+
+    function closeLogoutBanner() {
+        document.getElementById('logout-modal').style.display = 'none';
+    }
+
+    function confirmLogout() {
+        localStorage.removeItem('pinkAuraCart');
+        localStorage.removeItem('loggedIn');
+        window.location.href = '/login';
+    }
+
+    function flyToCart(btn) {
+        const productCard = btn.closest(".product-item");
+        const productImg = productCard.querySelector("img");
+        const cartIcon = document.getElementById("cartIcon");
+
+        if(!productImg || !cartIcon) return;
+
+        const img = productImg.cloneNode(true);
+        document.body.appendChild(img);
+
+        const start = productImg.getBoundingClientRect();
+        const end = cartIcon.getBoundingClientRect();
+
+        img.style.position = "fixed";
+        img.style.left = start.left + "px";
+        img.style.top = start.top + "px";
+        img.style.width = start.width + "px";
+        img.style.height = start.height + "px";
+        img.style.zIndex = "99999";
+        img.style.transition = "all 0.8s ease";
+        img.style.pointerEvents = "none";
+
+        setTimeout(() => {
+            img.style.left = end.left + "px";
+            img.style.top = end.top + "px";
+            img.style.width = "30px";
+            img.style.height = "30px";
+            img.style.opacity = "0";
+        }, 10);
+
+        setTimeout(() => {
+            img.remove();
+        }, 900);
+    }
+</script>
+
+</body>
+</html>

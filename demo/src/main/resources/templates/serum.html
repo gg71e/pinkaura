@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pink Aura | Serum Products</title>
+    <style>
+        body { background:#fff0f5; font-family: 'Segoe UI', Tahoma, sans-serif; margin:0; overflow-x: hidden; }
+        
+        header { background:#9f2863; padding:15px 60px; color:white; display:flex; justify-content: space-between; align-items:center; flex-wrap: wrap; }
+        header h1 { margin:0; font-family: 'Playfair Display', serif; font-size:32px; }
+        .logo-container { display: flex; align-items: center; }
+        .logo-container img { width:60px; height:60px; margin-right:15px; border-radius:10px; }
+        nav a { color:white; text-decoration:none; margin-left:20px; font-weight:bold; padding:8px 18px; border-radius:20px; transition:0.3s; }
+        nav a:hover, nav a.active { background:#ff69b4; }
+
+        .skincare-title { text-align: center; font-family: 'Playfair Display', serif; color: #9f2863; font-size: 45px; margin: 40px 0 20px 0; }
+        .category-nav { justify-content: center; display: flex; gap: 12px; padding: 20px 60px; margin-bottom: 20px; flex-wrap: wrap; }
+        .category-nav a { text-decoration: none; color: #9f2863; background-color: #fce4ec; padding: 10px 22px; border-radius: 50px; font-weight: 600; font-size: 14px; border: 1px solid #f8bbd0; transition: 0.3s; }
+        .category-nav a:hover { background-color: #9f2863; color: white; }
+
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; padding: 40px 60px; background-color: #fff; }
+        .product-item { background: #fff; border-radius: 12px; padding: 15px; transition: all 0.3s ease; border: 1px solid rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; }
+        .product-item:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(159, 40, 99, 0.1); }
+        .product-item img { width: 100%; height: 250px; object-fit: contain; background-color: #f9f9f9; border-radius: 8px; margin-bottom: 15px; cursor: pointer; }
+        
+        .brand-name { color: #9f2863; font-weight: bold; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+        .product-name { font-size: 14px; color: #333; margin: 8px 0; min-height: 42px; line-height: 1.4; }
+        .product-price { font-weight: bold; font-size: 18px; color: #9f2863; display: block; margin-bottom: 10px; }
+
+        .add-to-cart-btn { background: #9f2863; color: white; border: none; padding: 12px; width: 100%; border-radius: 25px; cursor: pointer; transition: 0.3s; font-weight: bold; }
+        .add-to-cart-btn:hover { background: #ff69b4; transform: scale(1.02); }
+        
+        .cart-nav-item { display: inline-flex; align-items: center; background: #9f2863; color: white; padding: 5px 15px; border-radius: 20px; cursor: pointer; margin-left: 15px; font-weight: bold; transition: 0.3s; gap: 8px; }
+        .cart-nav-item:hover { background: #ff69b4; color: #9f2863; }
+        
+        .cart-sidebar { position: fixed; top: 0; right: -400px; width: 350px; height: 100vh; background: white; box-shadow: -5px 0 15px rgba(0,0,0,0.1); transition: 0.4s; z-index: 2000; padding: 20px; display: flex; flex-direction: column; box-sizing: border-box; text-align: left; }
+        .cart-sidebar.open { right: 0; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .cart-header h3 { margin: 0; color: #9f2863; }
+        .close-cart { cursor: pointer; font-size: 24px; color: #9f2863; }
+        #cart-items-container { flex: 1; overflow-y: auto; margin-top: 15px; padding-right: 5px; }
+        .cart-item { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid #f9f9f9; padding-bottom: 10px; }
+        .cart-item img { width: 50px; height: 50px; object-fit: contain; border-radius: 5px; }
+        .cart-footer { border-top: 1px solid #eee; padding-top: 15px; margin-top: auto; }
+        .total-row { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 15px; color: #333; font-size: 18px; }
+        .checkout-btn { display: block; width: 100%; background: #9f2863; color: white; border: none; padding: 12px; border-radius: 25px; cursor: pointer; font-weight: bold; text-align: center; text-decoration: none; transition: 0.3s; }
+        .checkout-btn:hover { background: #ff69b4; }
+        
+        .category-nav a.active { background-color: #9f2863; color: white; }
+        
+        .profile-icon img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #ff69b4; object-fit: cover; cursor: pointer; transition: 0.3s; }
+        .profile-icon img:hover { transform: scale(1.1); }
+        
+        .filter-btn { position: fixed; left: 0; top: 120px; background: #9f2863; color: white; padding: 12px 18px; cursor: pointer; border-radius: 0 20px 20px 0; z-index: 3000; font-weight: bold; transition: 0.3s; }
+        .filter-btn:hover { background: #ff69b4; padding-left: 25px; }
+        
+        .filter-sidebar { position: fixed; top: 0; left: -380px; width: 320px; height: 100%; background: #fff0f5; padding: 20px; transition: 0.3s; z-index: 9999; overflow-y: auto; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+        .filter-sidebar.open { left: 0; }
+        .filter-sidebar h3 { color: #9f2863; margin-bottom: 20px; }
+        .filter-group { margin-bottom: 20px; }
+        .filter-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #333; }
+        .filter-group input[type="text"] { width: 100%; padding: 8px; border: 1px solid #f8bbd0; border-radius: 8px; }
+        .filter-group input[type="range"] { width: 100%; }
+        .filter-group input[type="checkbox"] { margin-right: 8px; }
+        .filter-sidebar button:hover { background: #ff69b4; }
+        
+        #logout-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 3000; justify-content: center; align-items: center; }
+
+        @media (max-width: 768px) {
+            header { padding: 15px 20px; flex-direction: column; gap: 15px; }
+            .products-grid { padding: 20px; gap: 15px; }
+            .category-nav { padding: 10px; }
+            .cart-sidebar { width: 100%; right: -100%; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo-container">
+        <img src="/images/logo.jpg" alt="Pink Aura Logo">
+        <h1>Pink Aura</h1>
+    </div>
+    <nav style="display: flex; align-items: center; flex-wrap: wrap;">
+        <a href="/home">Home</a>
+        <a href="/cleanser">Products</a>
+        <a href="/about">About Us</a>
+        <a href="/contact">Contact Us</a>
+
+        <div style="display: flex; align-items: center; gap: 15px; margin-left: 15px;">
+            <div class="cart-nav-item" onclick="toggleCart()" id="cartIcon">
+                🛒 <span id="cart-count">0</span>
+            </div>
+            <div class="logout-btn" onclick="showLogoutBanner()" style="cursor: pointer; font-size: 20px; color: white;">⏻</div>
+           
+        </div>
+    </nav>
+</header>
+
+<p class="skincare-title">Serum</p>
+
+<div class="category-nav">
+    <a href="/cleanser">Cleansers</a>
+ 
+    <a href="/sunscreen">Sunscreen</a>
+    <a href="/serum" class="active">Serum</a>
+    <a href="/moisturizer">Moisturizer</a>
+</div>
+
+<div class="filter-btn" onclick="toggleFilter()">🔍 Filter</div>
+
+<div id="filter-sidebar" class="filter-sidebar">
+    <h3>Filter Products</h3>
+    <div class="filter-group">
+        <input type="text" id="searchInput" placeholder="Search product...">
+    </div>
+    <div class="filter-group">
+        <label>Max Price</label>
+        <input type="range" id="priceRange" min="0" max="7000" value="7000">
+        <div><span id="priceValue">7000</span> EGP</div>
+    </div>
+    <div class="filter-group">
+        <label>Brand</label>
+        <label><input type="checkbox" value="Anua"> Anua</label><br>
+        <label><input type="checkbox" value="TirTir"> TirTir</label><br>
+        <label><input type="checkbox" value="Skin1004"> Skin1004</label><br>
+        <label><input type="checkbox" value="Dermaelle"> Dermaelle</label><br>
+        <label><input type="checkbox" value="bionnex"> Bionnex</label>
+    </div>
+    <div class="filter-group">
+        <label>Sort</label>
+        <select id="sortSelect">
+            <option value="">None</option>
+            <option value="low">Price: Low → High</option>
+            <option value="high">Price: High → Low</option>
+        </select>
+    </div>
+    <button onclick="applyFilter()" style="background:#9f2863;color:white;border:none;padding:10px;width:100%;border-radius:20px;margin-bottom:10px;cursor:pointer;">Apply</button>
+    <button onclick="resetFilter()" style="background:#ccc;color:#333;border:none;padding:10px;width:100%;border-radius:20px;cursor:pointer;">Reset</button>
+</div>
+
+<div class="products-grid">
+
+    
+    <div class="product-item" data-price="1400" data-brand="Anua" data-id="131">
+        <img src="/images/anua.jpeg" alt="Anua" onclick="goToProduct(131)">
+        <div class="brand-name">Anua</div>
+        <div class="product-name">Anua Niacinamide 10% + TXA 4% Serum 30ml</div>
+        <div class="product-price">1400 EGP</div>
+        <button class="add-to-cart-btn" onclick="addToCart(131, 'Anua Niacinamide Serum', 1400, '/images/anua.jpeg', event)">Add to Cart</button>
+    </div>
+
+   
+    <div class="product-item" data-price="1500" data-brand="TirTir" data-id="132">
+        <img src="/images/tir.jpg" alt="TirTir" onclick="goToProduct(132)">
+        <div class="brand-name">TirTir</div>
+        <div class="product-name">TirTir Niacinamide 20% Serum 30ml</div>
+        <div class="product-price">1500 EGP</div>
+        <button class="add-to-cart-btn" onclick="addToCart(132, 'TirTir Niacinamide Serum', 1500, '/images/tir.jpg', event)">Add to Cart</button>
+    </div>
+
+   
+    <div class="product-item" data-price="1100" data-brand="Skin1004" data-id="133">
+        <img src="/images/skin.webp" alt="Skin1004" onclick="goToProduct(133)">
+        <div class="brand-name">Skin1004</div>
+        <div class="product-name">SKIN1004 Madagascar Centella Tone Brightening Capsule Ampoule 50ml</div>
+        <div class="product-price">1100 EGP</div>
+        <button class="add-to-cart-btn" onclick="addToCart(133, 'Skin1004 Ampoule', 1100, '/images/skin.webp', event)">Add to Cart</button>
+    </div>
+
+    <div class="product-item" data-price="700" data-brand="Dermaelle" data-id="134">
+        <img src="/images/Skin-booster2.webp" alt="Dermaelle" onclick="goToProduct(134)">
+        <div class="brand-name">Dermaelle</div>
+        <div class="product-name">Dermaelle Skin Booster MicroNeedling Serum 30 ML</div>
+        <div class="product-price">700 EGP</div>
+        <button class="add-to-cart-btn" onclick="addToCart(134, 'Dermaelle Skin Booster', 700, '/images/Skin-booster2.webp', event)">Add to Cart</button>
+    </div>
+
+    
+    <div class="product-item" data-price="1500" data-brand="Anua" data-id="135">
+        <img src="/images/aze-1.webp" alt="Anua" onclick="goToProduct(135)">
+        <div class="brand-name">Anua</div>
+        <div class="product-name">Anua Azelaic Acid 10 + Hyaluron Redness Soothing Serum 30Ml</div>
+        <div class="product-price">1500 EGP</div>
+        <button class="add-to-cart-btn" onclick="addToCart(135, 'Anua Azelaic Serum', 1500, '/images/aze-1.webp', event)">Add to Cart</button>
+    </div>
+
+   
+    <div class="product-item" data-price="900" data-brand="bionnex" data-id="136">
+        <img src="/images/bionnex-hyaluronic-acid-30ml-768x768.jpg" alt="bionnex" onclick="goToProduct(136)">
+        <div class="brand-name">bionnex</div>
+        <div class="product-name">bionnex hyaluronic acid 30ml</div>
+        <div class="product-price">900 EGP</div>
+        <button class="add-to-cart-btn" onclick="addToCart(136, 'bionnex hyaluronic acid', 900, '/images/bionnex-hyaluronic-acid-30ml-768x768.jpg', event)">Add to Cart</button>
+    </div>
+
+</div>
+
+<div id="cart-sidebar" class="cart-sidebar">
+    <div class="cart-header">
+        <h3>Your Cart</h3>
+        <span class="close-cart" onclick="toggleCart()">&times;</span>
+    </div>
+    <div id="cart-items-container"></div>
+    <div class="cart-footer">
+        <div class="total-row">
+            <span>Total:</span>
+            <span><span id="cart-total">0</span> EGP</span>
+        </div>
+        <a href="/checkout" class="checkout-btn">Proceed to Checkout</a>
+    </div>
+</div>
+
+<div id="logout-modal">
+    <div style="background: white; padding: 30px; border-radius: 15px; text-align: center; width: 300px;">
+        <h3 style="color: #9f2863;">Logout</h3>
+        <p>Are you sure you want to logout?</p>
+        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+            <button onclick="confirmLogout()" style="background: #9f2863; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer;">Logout</button>
+            <button onclick="closeLogoutBanner()" style="background: #eee; color: #333; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer;">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let cart = JSON.parse(localStorage.getItem('pinkAuraCart')) || [];
+
+    window.onload = function() {
+     
+        updateCartUI();
+    };
+
+    function toggleCart() {
+        document.getElementById('cart-sidebar').classList.toggle('open');
+    }
+
+    function goToProduct(productId) {
+        window.location.href = '/product/' + productId;
+    }
+
+    function addToCart(productId, name, price, img, event) {
+        if(event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        
+        cart.push({
+            product_id: productId,
+            name: name,
+            price: parseFloat(price),
+            image: img
+        });
+        
+        updateCartUI();
+        localStorage.setItem('pinkAuraCart', JSON.stringify(cart));
+        
+        // Button feedback
+        const btn = event.target;
+        const originalText = btn.textContent;
+        btn.textContent = '✓ Added!';
+        btn.style.background = '#4CAF50';
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.background = '#9f2863';
+        }, 1000);
+        
+        flyToCart(event.target);
+    }
+
+    function updateCartUI() {
+        const container = document.getElementById('cart-items-container');
+        const totalElem = document.getElementById('cart-total');
+        const countElem = document.getElementById('cart-count');
+        
+        if(!container) return;
+        
+        container.innerHTML = '';
+        let total = 0;
+
+        if(cart.length === 0) {
+            container.innerHTML = '<div style="text-align: center; color: #999; padding: 40px 20px;">Your cart is empty</div>';
+        } else {
+            cart.forEach((item, index) => {
+                total += item.price;
+                container.innerHTML += `
+                    <div class="cart-item">
+                        <img src="${item.image}" style="width:50px; height:50px; object-fit:contain; border-radius:5px;">
+                        <div style="flex:1;">
+                            <div style="font-size:14px; font-weight:bold; color:#333;">${item.name}</div>
+                            <div style="color:#9f2863; font-weight:bold;">${item.price} EGP</div>
+                        </div>
+                        <button onclick="removeFromCart(${index})" style="color:#999; background:none; border:none; cursor:pointer; font-size:24px;">&times;</button>
+                    </div>
+                `;
+            });
+        }
+
+        if(totalElem) totalElem.innerText = total;
+        if(countElem) countElem.innerText = cart.length;
+        localStorage.setItem('pinkAuraCart', JSON.stringify(cart));
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCartUI();
+    }
+
+    function showLogoutBanner() {
+        document.getElementById('logout-modal').style.display = 'flex';
+    }
+
+    function closeLogoutBanner() {
+        document.getElementById('logout-modal').style.display = 'none';
+    }
+
+    function confirmLogout() {
+        localStorage.removeItem("loggedIn");
+        localStorage.removeItem("pinkAuraCart");
+        window.location.href = '/login';
+    }
+
+    function toggleFilter() {
+        document.getElementById('filter-sidebar').classList.toggle('open');
+    }
+
+    let priceRange = document.getElementById("priceRange");
+    let priceValue = document.getElementById("priceValue");
+
+    if(priceRange) {
+        priceRange.oninput = function() {
+            priceValue.innerText = this.value;
+        }
+    }
+
+    function applyFilter() {
+        let searchValue = document.getElementById("searchInput").value.toLowerCase();
+        let maxPrice = parseInt(document.getElementById("priceRange").value);
+        let sortValue = document.getElementById("sortSelect").value;
+
+        let checkedBrands = [];
+        document.querySelectorAll('#filter-sidebar input[type="checkbox"]:checked')
+            .forEach(cb => checkedBrands.push(cb.value));
+
+        let products = Array.from(document.querySelectorAll(".product-item"));
+        let container = document.querySelector(".products-grid");
+
+      
+        products.forEach(p => {
+            let price = parseInt(p.dataset.price);
+            let text = p.innerText.toLowerCase();
+            let brand = p.dataset.brand;
+
+            let show = true;
+            if(searchValue && !text.includes(searchValue)) show = false;
+            if(price > maxPrice) show = false;
+            if(checkedBrands.length && !checkedBrands.includes(brand)) show = false;
+
+            p.style.display = show ? "flex" : "none";
+        });
+
+  
+        let visibleProducts = products.filter(p => p.style.display !== "none");
+        if(sortValue === "low") {
+            visibleProducts.sort((a,b) => parseInt(a.dataset.price) - parseInt(b.dataset.price));
+        } else if(sortValue === "high") {
+            visibleProducts.sort((a,b) => parseInt(b.dataset.price) - parseInt(a.dataset.price));
+        }
+
+  
+        visibleProducts.forEach(p => container.appendChild(p));
+
+        document.getElementById("filter-sidebar").classList.remove("open");
+    }
+
+    function resetFilter() {
+        document.getElementById("searchInput").value = "";
+        document.getElementById("priceRange").value = 7000;
+        document.getElementById("priceValue").innerText = 7000;
+        document.getElementById("sortSelect").value = "";
+
+        document.querySelectorAll('#filter-sidebar input[type="checkbox"]')
+            .forEach(cb => cb.checked = false);
+
+        document.querySelectorAll('.product-item')
+            .forEach(p => p.style.display = "flex");
+    }
+
+    function flyToCart(btn) {
+        const productCard = btn.closest(".product-item");
+        const productImg = productCard.querySelector("img");
+        const cartIcon = document.getElementById("cartIcon");
+
+        if(!productImg || !cartIcon) return;
+
+        const img = productImg.cloneNode(true);
+        document.body.appendChild(img);
+
+        const start = productImg.getBoundingClientRect();
+        const end = cartIcon.getBoundingClientRect();
+
+        img.style.position = "fixed";
+        img.style.left = start.left + "px";
+        img.style.top = start.top + "px";
+        img.style.width = start.width + "px";
+        img.style.height = start.height + "px";
+        img.style.zIndex = "99999";
+        img.style.transition = "all 0.8s ease";
+        img.style.pointerEvents = "none";
+
+        setTimeout(() => {
+            img.style.left = end.left + "px";
+            img.style.top = end.top + "px";
+            img.style.width = "30px";
+            img.style.height = "30px";
+            img.style.opacity = "0";
+        }, 10);
+
+        setTimeout(() => {
+            img.remove();
+        }, 900);
+    }
+</script>
+
+</body>
+</html>

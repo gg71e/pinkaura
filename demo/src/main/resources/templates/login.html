@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pink Aura | Login</title>
     <style>
-        /* كل الـ CSS بتاعك (القديم + الجديد لرسالة الخطأ) */
         body { background:#fff0f5; font-family: 'Segoe UI', Tahoma, sans-serif; margin:0; overflow-x: hidden; }
         header { background:#9f2863; padding:15px 60px; color:white; display:flex; justify-content: space-between; align-items:center; }
         header h1 { margin:0; font-family: 'Playfair Display', serif; font-size:32px; }
@@ -34,6 +33,10 @@
         .signup-link { text-align: center; margin-top: 20px; font-size: 14px; }
         .signup-link a { color: #9f2863; font-weight: bold; text-decoration: none; }
         .error-msg { color: #d32f2f; background: #ffcdd2; padding: 10px; border-radius: 10px; text-align: center; margin-bottom: 15px; font-size: 14px; }
+        
+        
+        .banner-error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 30px; margin-bottom: 15px; text-align: center; font-size: 14px; border: 1px solid #f5c6cb; }
+        .banner-success { background: #d4edda; color: #155724; padding: 10px; border-radius: 30px; margin-bottom: 15px; text-align: center; font-size: 14px; border: 1px solid #c3e6cb; }
 
         .cart-nav-item { background:#9f2863; color: white; padding: 5px 15px; border-radius: 20px; cursor: pointer; margin-left: 15px; font-weight: bold; display: flex; align-items: center; }
         .cart-sidebar { position: fixed; top: 0; right: -400px; width: 350px; height: 100vh; background: white; box-shadow: -5px 0 15px rgba(0,0,0,0.1); transition: 0.4s; z-index: 2000; padding: 20px; display: flex; flex-direction: column; box-sizing: border-box; }
@@ -74,6 +77,13 @@
                 Invalid email or password 🌸
             </div>
 
+            <div th:if="${error}" class="banner-error">
+                <span th:text="${error}"></span>
+            </div>
+            <div th:if="${success}" class="banner-success">
+                <span th:text="${success}"></span>
+            </div>
+
             <form th:action="@{/login}" method="post">
                 <div class="input-group">
                     <input type="email" name="username" placeholder="Email Address" required>
@@ -84,10 +94,36 @@
                 <button type="submit" class="login-btn">Login</button>
             </form>
 
+            <div style="text-align: center; margin-top: 15px;">
+                <a href="#" id="openModalBtn" style="color: #9f2863; text-decoration: none; font-size: 14px; font-weight: 500;">Forgot Password?</a>
+            </div>
+
             <div class="signup-link">Don't have an account? <a th:href="@{/signup}">Create Account</a></div>
         </div>
     </div>
 </main>
+
+<div id="forgotPasswordModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 3000;">
+    <div style="background: white; padding: 30px; border-radius: 20px; width: 350px; text-align: center; border-top: 5px solid #9f2863; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+        
+        <span id="closeModalBtn" style="position: absolute; top: 10px; right: 20px; cursor: pointer; font-size: 24px; color: #aaa; font-weight: bold;">&times;</span>
+        
+        <h3 style="color: #9f2863; margin-top: 0; font-size: 22px;">Reset Password</h3>
+        <p style="color: #666; font-size: 13px; margin-bottom: 20px;">Enter your email to create a new password directly.</p>
+        
+        <form th:action="@{/login/forgot-password}" method="POST">
+            <input type="email" name="email" placeholder="Your Registered Email" required 
+                   style="width: 100%; padding: 12px 20px; margin: 8px 0; border-radius: 30px; border: 1px solid #ddd; box-sizing: border-box; outline: none;">
+            
+            <input type="password" name="newPassword" placeholder="Enter New Password" required minlength="6"
+                   style="width: 100%; padding: 12px 20px; margin: 8px 0; border-radius: 30px; border: 1px solid #ddd; box-sizing: border-box; outline: none;">
+            
+            <button type="submit" class="login-btn" style="margin-top: 15px; padding: 12px;">
+                Update Password
+            </button>
+        </form>
+    </div>
+</div>
 
 <div id="cart-sidebar" class="cart-sidebar">
     <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 15px;">
@@ -107,7 +143,27 @@
 <footer>© 2026 Pink Aura | Elegance in Every Touch</footer>
 
 <script>
-    // كود الـ Cart اللي كان معاكي شغال بـ LocalStorage
+  
+    const modal = document.getElementById("forgotPasswordModal");
+    const openBtn = document.getElementById("openModalBtn");
+    const closeBtn = document.getElementById("closeModalBtn");
+
+    openBtn.onclick = function(e) {
+        e.preventDefault();
+        modal.style.display = "flex";
+    }
+
+    closeBtn.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+
     let cart = JSON.parse(localStorage.getItem('pinkAuraCart')) || [];
 
     window.onload = function () {

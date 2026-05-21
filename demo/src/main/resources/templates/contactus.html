@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Pink Aura | Contact Us</title>
     <style>
-        /* التنسيقات الأصلية بتاعتك مع تحسينات بسيطة */
+    
         body { background: #ffffff; font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; overflow-x: hidden; }
         header { background: #9f2863; padding: 15px 60px; color: white; display: flex; justify-content: space-between; align-items: center; }
         header h1 { margin: 0; font-family: 'Playfair Display', serif; font-size: 32px; }
@@ -51,7 +51,7 @@
         <a th:href="@{/contactus}" class="active">Contact Us</a>
         <div style="display: flex; align-items: center; gap: 15px; margin-left: 15px;">
             <div class="cart-nav-item" onclick="toggleCart()">🛒 <span id="cart-count">0</span></div>
-            <div class="profile-icon"><a th:href="@{/profile}"><img th:src="@{/images/girl.png}" alt="Profile"></a></div>
+           
         </div>
     </nav>
 </header>
@@ -118,7 +118,7 @@
 <footer>© 2026 Pink Aura | Elegance in Every Touch</footer>
 
 <script>
-    // Cart Logic
+   
     let cart = JSON.parse(localStorage.getItem('pinkAuraCart')) || [];
     function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('open'); }
     

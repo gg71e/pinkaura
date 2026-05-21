@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "contact_messages") // اسم الجدول الحقيقي في الداتابيز
+@Table(name = "contact_messages")
 public class ContactUs {
 
     @Id
@@ -19,7 +19,7 @@ public class ContactUs {
     private String email;
     private String message;
 
-    // Getters and Setters
+   
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

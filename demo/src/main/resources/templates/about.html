@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pink Aura - About Us</title>
+    <style>
+        body {
+            background-color: #fff0f5;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background: #9f2863;
+            padding: 15px 60px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-container img {
+            width: 60px;
+            height: 60px;
+            margin-right: 15px;
+            border-radius: 10px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+            padding: 8px 18px;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            background: #ff69b4;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .page-title h2 {
+            color: #9f2863;
+            font-size: 42px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .page-title p {
+            color: #ff69b4;
+            font-size: 20px;
+        }
+
+        .about-section {
+            width: 90%;
+            max-width: 1200px;
+            margin: 50px auto;
+            overflow: hidden;
+            padding: 0 20px;
+        }
+
+        .about-img {
+            width: 400px;
+            height: auto;
+            float: right;
+            margin-left: 30px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .about-text {
+            font-family: 'Playfair Display', serif;
+            font-weight: bold;
+            font-size: 18px;
+            color: #444;
+            line-height: 1.6;
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+        }
+
+        .cart-nav-item {
+            display: inline-flex;
+            align-items: center;
+            background: #9f2863;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-left: 15px;
+            font-weight: bold;
+            transition: 0.3s;
+            gap: 8px;
+        }
+        
+        .cart-nav-item:hover {
+            background: #ff69b4;
+            color: #9f2863;
+        }
+        
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 350px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            transition: 0.4s;
+            z-index: 2000;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            text-align: left;
+        }
+        
+        .cart-sidebar.open {
+            right: 0;
+        }
+        
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+        
+        .cart-header h3 {
+            margin: 0;
+            color: #9f2863;
+        }
+        
+        .close-cart {
+            cursor: pointer;
+            font-size: 24px;
+            color: #9f2863;
+        }
+        
+        #cart-items-container {
+            flex: 1;
+            overflow-y: auto;
+            margin-top: 15px;
+            padding-right: 5px;
+        }
+        
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #f9f9f9;
+            padding-bottom: 10px;
+        }
+        
+        .cart-item img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 5px;
+        }
+        
+        .cart-footer {
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            margin-top: auto;
+        }
+        
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .checkout-btn {
+            display: block;
+            width: 100%;
+            background: #9f2863;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        
+        .checkout-btn:hover {
+            background: #ff69b4;
+        }
+        
+        footer {
+            background-color: #9f2863;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 50px;
+        }
+        
+        .profile-icon img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #ff69b4;
+            object-fit: cover;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .profile-icon img:hover {
+            transform: scale(1.1);
+        }
+        
+        #logout-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        @media (max-width: 768px) {
+            header { padding: 15px 20px; flex-direction: column; gap: 15px; }
+            .about-img { width: 100%; float: none; margin: 0 0 20px 0; }
+            .about-text { font-size: 16px; }
+            .page-title h2 { font-size: 32px; }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo-container">
+        <img src="/images/logo.jpg" alt="Pink Aura Logo">
+        <h1>Pink Aura</h1>
+    </div>
+    <nav style="display: flex; align-items: center; flex-wrap: wrap;">
+        <a href="/home">Home</a>
+        <a href="/products">Products</a>
+        <a href="/about" class="active">About Us</a>
+        <a href="/contact">Contact Us</a>
+        <div style="display: flex; align-items: center; gap: 15px; margin-left: 15px;">
+            <div class="cart-nav-item" onclick="toggleCart()">
+                🛒 <span id="cart-count">0</span>
+            </div>
+           
+        </div>
+    </nav>
+</header>
+
+<div class="page-title">
+    <h2>About Us</h2>
+    <p>Where Your Glow Begins</p>
+</div>
+
+<div class="about-section">
+   
+
+    
+   
+        <p>Pink Aura is the result of my passion for combining beauty with technology. The idea for this project came from noticing the lack of specialized e-commerce platforms for beauty products in Egypt, similar to global experiences like Sephora in terms of ease of use and product variety.</p>
+  
+
+   
+        <p>I decided to take the initiative and build a complete e-commerce platform from scratch, handling all stages of development and design on my own.</p>
+        
+      
+                <p>I built the website structure and designed attractive, interactive interfaces using HTML, CSS, and Thymeleaf, focusing on providing a smooth and visually comfortable user experience.</p>
+            
+           
+                <p>I programmed all website features, from displaying products to managing the shopping cart, using JavaScript to ensure fast and responsive interaction.</p>
+           
+                
+                <p>I built a complete user management system including registration and login pages, with data security and validation, and connected everything to a MySQL database using Spring Boot JPA to ensure platform stability and flexibility.</p>
+            
+   
+        <p>Pink Aura is not just a graduation project or a school assignment. It is a reflection of my full-stack web development skills and my ability to turn a simple idea into a fully functional web application.</p>
+        <p>I built this project during long nights, with a lot of effort and dedication. I will continue to develop it and make it even stronger in the future.</p>
+   
+
+    
+        <p>This project is a story of challenge that proved to me that passion combined with hard work can build complex systems with full confidence.</p>
+   
+
+</div>
+<div id="cart-sidebar" class="cart-sidebar">
+    <div class="cart-header">
+        <h3>Your Cart</h3>
+        <span class="close-cart" onclick="toggleCart()">&times;</span>
+    </div>
+    <div id="cart-items-container"></div>
+    <div class="cart-footer">
+        <div class="total-row">
+            <span>Total:</span>
+            <span><span id="cart-total">0</span> EGP</span>
+        </div>
+        <a href="/checkout" class="checkout-btn">Checkout</a>
+    </div>
+</div>
+
+<div id="logout-modal">
+    <div style="background: white; padding: 30px; border-radius: 15px; text-align: center; width: 300px;">
+        <h3 style="color: #9f2863;">Logout</h3>
+        <p>Do you want to logout of your account?</p>
+        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+            <button onclick="confirmLogout()" style="background: #9f2863; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer;">Logout</button>
+            <button onclick="closeLogoutBanner()" style="background: #eee; color: #333; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer;">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<footer>
+    © 2026 Pink Aura | All Rights Reserved
+</footer>
+
+<script>
+    let cart = JSON.parse(localStorage.getItem('pinkAuraCart')) || [];
+
+  
+
+    function toggleCart() {
+        document.getElementById('cart-sidebar').classList.toggle('open');
+    }
+
+    function updateCartUI() {
+        const container = document.getElementById('cart-items-container');
+        const totalElem = document.getElementById('cart-total');
+        const countElem = document.getElementById('cart-count');
+        
+        if (!container) return;
+        
+        container.innerHTML = '';
+        let total = 0;
+
+        if (cart.length === 0) {
+            container.innerHTML = '<div style="text-align:center; color:#999; padding:40px;">Cart is empty</div>';
+        } else {
+            cart.forEach((item, index) => {
+                total += item.price;
+                container.innerHTML += `
+                    <div class="cart-item">
+                        <img src="${item.img}" style="width:50px; height:50px; object-fit:contain; border-radius:5px;">
+                        <div style="flex:1;">
+                            <div style="font-size:14px; font-weight:bold; color:#333;">${item.name}</div>
+                            <div style="color:#9f2863; font-weight:bold;">${item.price} EGP</div>
+                        </div>
+                        <button onclick="removeFromCart(${index})" style="color:#999; background:none; border:none; cursor:pointer; font-size:20px;">&times;</button>
+                    </div>
+                `;
+            });
+        }
+
+        if (totalElem) totalElem.innerText = total;
+        if (countElem) countElem.innerText = cart.length;
+        localStorage.setItem('pinkAuraCart', JSON.stringify(cart));
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCartUI();
+    }
+
+    function showLogoutBanner() {
+        document.getElementById('logout-modal').style.display = 'flex';
+    }
+
+    function closeLogoutBanner() {
+        document.getElementById('logout-modal').style.display = 'none';
+    }
+
+    function confirmLogout() {
+        localStorage.removeItem("loggedIn");
+        localStorage.removeItem("pinkAuraCart");
+        window.location.href = "/login";
+    }
+</script>
+
+</body>
+</html>

@@ -22,10 +22,10 @@ public class UserSecurity {
         http
             .csrf(csrf -> csrf.disable()) 
             .authorizeHttpRequests(auth -> auth
-                // حماية صفحات الأدمن
+               
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 
-                // السماح بالصفحات العامة
+              
                 .requestMatchers(
                     "/login", 
                     "/signup", 
@@ -45,17 +45,17 @@ public class UserSecurity {
             .formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/login") 
-                // الـ Handler الذكي للتوجيه حسب الـ Role
+                
                 .successHandler((request, response, authentication) -> {
                     var authorities = authentication.getAuthorities();
                     for (var authority : authorities) {
-                        // بنشيك لو الأدمن داخل (بما إن الـ Service بتبعته كـ ROLE_ADMIN)
+                       
                         if (authority.getAuthority().equals("ROLE_ADMIN")) {
                             response.sendRedirect("/admin/dashboard");
                             return;
                         }
                     }
-                    // لو يوزر عادي يروح لصفحة المنتجات
+                    
                     response.sendRedirect("/products");
                 })
                 .permitAll()

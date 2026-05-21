@@ -2,10 +2,12 @@ package com.example.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model; // <--- لازم السطر ده يكون موجود
+import org.springframework.ui.Model; 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
@@ -16,27 +18,41 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    // صفحة اللوجن
+    
     @GetMapping("/login")
     public String loginPage() {
         return "login"; 
     }
 
-    // صفحة السين اب (بعد التعديل)
+   
     @GetMapping("/signup")
     public String signupPage(Model model) { 
-        // بنجهز كائن يوزر فاضي عشان الفورم في Thymeleaf تملاه
         model.addAttribute("user", new User()); 
         return "signup"; 
     }
 
-    // عملية التسجيل الفعلية
+   
     @PostMapping("/register")
     public String registerUser(@ModelAttribute User user) {
-        // بنبعت اليوزر للسيرفيس وهي تشفر وتحفظ
         userService.registerNewUser(user); 
+        return "redirect:/login";
+    }
+
+
+    @PostMapping("/login/forgot-password")
+    public String handlePopupResetPassword(@RequestParam("email") String email, 
+                                           @RequestParam("newPassword") String newPassword,
+                                           RedirectAttributes redirectAttributes) {
         
-        // بعد النجاح بنوديه لصفحة اللوجن
+       
+        boolean isUpdated = userService.updatePasswordByEmail(email, newPassword);
+        
+        if (!isUpdated) {
+            redirectAttributes.addFlashAttribute("error", "Email not found!");
+            return "redirect:/login";
+        }
+        
+        redirectAttributes.addFlashAttribute("success", "Password updated successfully!");
         return "redirect:/login";
     }
 }
