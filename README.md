@@ -1,32 +1,99 @@
-Pink Aura 🌸
+# 🌸 Pink Aura
 
-Pink Aura is a full-stack e-commerce web application dedicated to cosmetics and skincare products. This project was built to provide a seamless shopping experience for customers while offering a robust management dashboard for admins.
-🛠️ Tech Stack
+Pink Aura is a full-stack e-commerce web application designed for cosmetics and skincare products. The platform provides customers with a smooth online shopping experience while offering administrators powerful tools to manage products, users, and orders efficiently.
 
-The project follows the MVC (Model-View-Controller) architecture using the following technologies:
+---
 
-    Backend: Java, Spring Boot
+## 🚀 Features
 
-    Frontend: Thymeleaf, HTML5, CSS3, JavaScript
+### 👩‍💼 Admin Dashboard
+- Manage products with full CRUD operations.
+- Monitor and manage customer orders.
+- Manage user accounts and system data.
 
-    Database: MySQL
+### 🛍️ Customer Experience
+- Browse products through an organized catalog.
+- Filter products by categories.
+- Add products to a shopping cart.
+- User registration and secure login system.
 
-    ORM: JPA / Hibernate
+### 🔒 Security & Authentication
+- Secure authentication and authorization.
+- Protected admin functionalities.
+- Session-based user management.
 
-🚀 Key Features
+### 🛒 Persistent Shopping Cart
+- Cart data is maintained across navigation and login sessions.
+- Improved user shopping experience.
 
-    Admin Dashboard: Full CRUD operations to manage product inventory, user accounts, and order tracking.
+---
 
-    Customer Shopping: Intuitive product catalog with category-based filtering.
+## 🛠️ Technologies Used
 
-    Persistent Cart: Session management ensures that items remain in the cart across navigation and login states.
+### Backend
+- Java
+- Spring Boot
+- Spring Data JPA
+- Hibernate
 
-    Security & Auth: Secure login and registration flows.
+### Frontend
+- Thymeleaf
+- HTML5
+- CSS3
+- JavaScript
 
-📋 Project Structure
+### Database
+- MySQL
 
-    src/main/java: Contains the Spring Boot controllers, services, repositories, and entities.
+### Architecture
+- MVC (Model-View-Controller)
 
-    src/main/resources/templates: Contains the Thymeleaf HTML templates for the frontend.
+---
 
-    src/main/resources/static: Contains CSS and JavaScript files for styling and interactivity.
+## 📂 Project Structure
+
+```text
+src/
+ ├── main/
+ │   ├── java/
+ │   │   ├── controllers/
+ │   │   ├── services/
+ │   │   ├── repositories/
+ │   │   └── entities/
+ │   │
+ │   └── resources/
+ │       ├── templates/
+ │       ├── static/
+ │       └── application.properties
+```
+
+---
+
+## 🎯 Learning Outcomes
+
+Through this project, I gained hands-on experience in:
+
+- Building full-stack web applications using Spring Boot.
+- Applying Object-Oriented Programming (OOP) principles.
+- Implementing MVC architecture.
+- Designing and managing relational databases with MySQL.
+- Creating dynamic web pages using Thymeleaf.
+- Implementing authentication and session management.
+
+---
+
+## 📌 Future Improvements
+
+- Product search functionality.
+- Online payment integration.
+- Product reviews and ratings.
+- Wishlist feature.
+- REST API support for mobile applications.
+
+---
+
+## 👩‍💻 Author
+
+**Ganna Hany Elwan**
+
+Computer Science Student | Aspiring AI & Machine Learning Engineer
